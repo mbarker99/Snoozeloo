@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.embarkapps.snoozeloo.alarms.domain.model.Alarm
 import com.embarkapps.snoozeloo.ui.theme.SnoozelooTheme
+import com.embarkapps.snoozeloo.ui.theme.montserratFontFamily
 import java.time.ZonedDateTime
 
 @Composable
@@ -46,55 +47,60 @@ fun AlarmCard(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+        Row(
+            modifier = Modifier.padding(16.dp)
         ) {
-            // Title and Switch
-            Row(
-                verticalAlignment = Alignment.CenterVertically
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text(
                     text = alarm.title,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight(600),
+                    fontWeight = FontWeight.SemiBold,
                     lineHeight = 19.5.sp,
-                    modifier = Modifier.weight(1f)
+                    fontFamily = montserratFontFamily,
                 )
 
-                Switch(
-                    checked = alarm.isEnabled,
-                    onCheckedChange = {},
-                    colors = switchColors
-                )
-            }
+                Row(
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    // TODO : implement time calculation here
+                    Text(
+                        text = "10:00",
+                        fontSize = 42.sp,
+                        fontWeight = FontWeight.Medium,
+                        lineHeight = 51.2.sp,
+                        fontFamily = montserratFontFamily,
+                    )
 
-            // Time and AM/PM
-            Row(
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
+                    Text(
+                        text = "AM",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Medium,
+                        lineHeight = 29.26.sp,
+                        fontFamily = montserratFontFamily,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+                }
+
+                // TODO : calculate remaining time here
                 Text(
-                    text = "10:00",
-                    fontSize = 42.sp,
-                    fontWeight = FontWeight(500),
-                    lineHeight = 51.2.sp,
-                )
-                Text(
-                    text = "AM",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight(500),
-                    lineHeight = 29.26.sp,
-                    modifier = Modifier.padding(bottom = 4.dp)
+                    text = "Alarm in 5h 30min",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    lineHeight = 17.07.sp,
+                    fontFamily = montserratFontFamily,
+                    color = Color(0xFF858585)
                 )
 
+
             }
-            Text(
-                text = "Alarm in 5h 30min",
-                fontSize = 14.sp,
-                fontWeight = FontWeight(500),
-                lineHeight = 17.07.sp,
-                color = Color(0xFF858585)
+            Switch(
+                checked = alarm.isEnabled,
+                onCheckedChange = {},
+                colors = switchColors
             )
         }
     }
@@ -106,7 +112,8 @@ fun AlarmCard(
 private fun AlarmCardPreview() {
     SnoozelooTheme {
         AlarmCard(
-            alarm = previewAlarm
+            alarm = previewAlarm,
+            isExtended = false
         )
     }
 

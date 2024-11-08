@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Snoozeloo" parent="android:Theme.Material.Light.NoActionBar" />
-
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/blue_80</item>
         <item name="postSplashScreenTheme">@style/Theme.Snoozeloo</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_alarm_foreground</item>
     </style>
-
 </resources>
