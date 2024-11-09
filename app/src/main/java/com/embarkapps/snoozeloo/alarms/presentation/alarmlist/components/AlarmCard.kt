@@ -70,7 +70,7 @@ fun AlarmCard(
                     Text(
                         text = "10:00",
                         fontSize = 42.sp,
-                        fontWeight = FontWeight.Medium,
+                        fontWeight = FontWeight.SemiBold,
                         lineHeight = 51.2.sp,
                         fontFamily = montserratFontFamily,
                     )
@@ -78,7 +78,7 @@ fun AlarmCard(
                     Text(
                         text = "AM",
                         fontSize = 24.sp,
-                        fontWeight = FontWeight.Medium,
+                        fontWeight = FontWeight.SemiBold,
                         lineHeight = 29.26.sp,
                         fontFamily = montserratFontFamily,
                         modifier = Modifier.padding(bottom = 4.dp)
