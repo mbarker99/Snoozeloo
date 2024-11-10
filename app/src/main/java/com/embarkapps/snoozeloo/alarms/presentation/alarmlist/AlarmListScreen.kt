@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,8 +34,14 @@ import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.montserratFontFamil
 @Composable
 fun AlarmListScreen(
     state: AlarmListState,
+    onAddAlarmClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    val topAppBarColors = TopAppBarDefaults.topAppBarColors().copy(
+        containerColor = Color(0xFFF6F6F6)
+    )
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -42,11 +49,12 @@ fun AlarmListScreen(
                     Text(
                         text = "Your Alarms",
                         fontFamily = montserratFontFamily,
-                        fontWeight = FontWeight(500),
+                        fontWeight = FontWeight.SemiBold,
                         fontSize = 24.sp,
                         lineHeight = 29.26.sp
                     )
-                }
+                },
+                colors = topAppBarColors
             )
         },
         floatingActionButton = {
@@ -57,7 +65,7 @@ fun AlarmListScreen(
                         contentDescription = "Add alarm"
                     )
                 },
-                onClick = { },
+                onClick = { onAddAlarmClick() },
                 shape = CircleShape,
                 containerColor = Color(0xFF4664FF),
                 contentColor = Color.White
@@ -108,7 +116,8 @@ fun AlarmListScreenPreview(modifier: Modifier = Modifier) {
             state = AlarmListState(
                 isLoading = false,
                 alarms = emptyList()
-            )
+            ),
+            onAddAlarmClick = {}
         )
     }
 

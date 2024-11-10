@@ -2,8 +2,9 @@ package com.embarkapps.snoozeloo.alarms.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.embarkapps.snoozeloo.core.domain.Constants
 
-@Entity
+@Entity(tableName = Constants.ALARM_TABLE_NAME)
 data class AlarmEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int,

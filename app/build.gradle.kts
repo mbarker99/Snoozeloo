@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -59,6 +60,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.ui.text.google.fonts)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.navigation.compose)
 
     // Splash Screen
     implementation(libs.androidx.core.splashscreen)
@@ -72,6 +75,7 @@ dependencies {
     // Room
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.room.compiler)
+    //noinspection KaptUsageInsteadOfKsp
     kapt(libs.androidx.room.room.compiler)
     implementation(libs.androidx.room.ktx)
     testImplementation(libs.androidx.room.testing)

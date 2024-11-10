@@ -35,7 +35,7 @@ import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.SnoozelooTheme
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.montserratFontFamily
 
 @Composable
-fun AlarmListScreen(
+fun AlarmDetailScreen(
     state: AlarmDetailState,
     modifier: Modifier = Modifier
 ) {
@@ -123,9 +123,9 @@ fun AlarmListScreen(
 
 @Preview
 @Composable
-fun AlarmListScreenPreview(modifier: Modifier = Modifier) {
+fun AlarmDetailScreenPreview(modifier: Modifier = Modifier) {
     SnoozelooTheme {
-        AlarmListScreen(
+        AlarmDetailScreen(
             state = AlarmDetailState(
                 isLoading = false,
                 alarm = previewAlarm,
