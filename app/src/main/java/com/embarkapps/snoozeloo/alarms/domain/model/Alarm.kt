@@ -1,10 +1,10 @@
 package com.embarkapps.snoozeloo.alarms.domain.model
 
-import java.time.ZonedDateTime
+import java.time.LocalDateTime
 
 data class Alarm(
     val id: Int,
     val title: String,
-    val isEnabled: Boolean,
-    val time: ZonedDateTime
+    val time: LocalDateTime,
+    val isEnabled: Boolean
 )

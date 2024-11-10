@@ -34,7 +34,7 @@ import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.montserratFontFamil
 @Composable
 fun AlarmListScreen(
     state: AlarmListState,
-    onAddAlarmClick: () -> Unit,
+    onEvent: (AlarmListUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -65,7 +65,7 @@ fun AlarmListScreen(
                         contentDescription = "Add alarm"
                     )
                 },
-                onClick = { onAddAlarmClick() },
+                onClick = { onEvent(AlarmListUiEvent.OnAddAlarmClicked) },
                 shape = CircleShape,
                 containerColor = Color(0xFF4664FF),
                 contentColor = Color.White
@@ -84,7 +84,8 @@ fun AlarmListScreen(
                 items(state.alarms) { alarm ->
                     AlarmCard(
                         alarm = alarm,
-                        isExtended = false
+                        isExtended = false,
+                        onEvent = onEvent
                     )
                 }
             }
@@ -117,7 +118,7 @@ fun AlarmListScreenPreview(modifier: Modifier = Modifier) {
                 isLoading = false,
                 alarms = emptyList()
             ),
-            onAddAlarmClick = {}
+            onEvent = {}
         )
     }
 

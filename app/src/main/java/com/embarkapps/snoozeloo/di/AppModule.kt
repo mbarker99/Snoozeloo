@@ -4,7 +4,10 @@ import android.content.Context
 import androidx.room.Room
 import com.embarkapps.snoozeloo.alarms.data.db.AlarmDao
 import com.embarkapps.snoozeloo.alarms.data.db.AlarmDatabase
+import com.embarkapps.snoozeloo.core.data.navigation.NavigatorImpl
 import com.embarkapps.snoozeloo.core.domain.Constants
+import com.embarkapps.snoozeloo.core.domain.navigation.Navigator
+import com.embarkapps.snoozeloo.core.presentation.navigation.Destination
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,4 +32,10 @@ class AppModule {
             Constants.DATABASE_NAME
         ).fallbackToDestructiveMigration()
             .build()
+
+    @Provides
+    @Singleton
+    fun provideNavigator(): Navigator = NavigatorImpl(
+        startDestination = Destination.AlarmsGraph
+    )
 }

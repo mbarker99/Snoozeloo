@@ -19,14 +19,16 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.embarkapps.snoozeloo.alarms.domain.model.Alarm
+import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.AlarmListUiEvent
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.SnoozelooTheme
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.montserratFontFamily
-import java.time.ZonedDateTime
+import java.time.LocalDateTime
 
 @Composable
 fun AlarmCard(
     alarm: Alarm,
     isExtended: Boolean,
+    onEvent: (AlarmListUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -99,7 +101,7 @@ fun AlarmCard(
             }
             Switch(
                 checked = alarm.isEnabled,
-                onCheckedChange = {},
+                onCheckedChange = { onEvent(AlarmListUiEvent.OnAlarmEnableToggle(alarm)) },
                 colors = switchColors
             )
         }
@@ -113,7 +115,8 @@ private fun AlarmCardPreview() {
     SnoozelooTheme {
         AlarmCard(
             alarm = previewAlarm,
-            isExtended = false
+            isExtended = false,
+            onEvent = {}
         )
     }
 
@@ -123,5 +126,5 @@ internal val previewAlarm = Alarm(
     id = 1,
     title = "Wake up",
     isEnabled = true,
-    time = ZonedDateTime.now()
+    time = LocalDateTime.now()
 )

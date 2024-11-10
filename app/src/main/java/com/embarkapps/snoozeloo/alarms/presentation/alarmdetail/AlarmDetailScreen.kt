@@ -37,6 +37,7 @@ import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.montserratFontFamil
 @Composable
 fun AlarmDetailScreen(
     state: AlarmDetailState,
+    onCloseClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val closeButtonColors = IconButtonDefaults.iconButtonColors().copy(
@@ -60,6 +61,7 @@ fun AlarmDetailScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
+            .padding(top = 32.dp)
     ) {
         // Close and Save buttons
         Row(
@@ -68,8 +70,8 @@ fun AlarmDetailScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(
-                onClick = { },
-                enabled = state.isValid,
+                onClick = { onCloseClick() },
+                enabled = true,
                 colors = saveButtonColors,
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
@@ -130,7 +132,8 @@ fun AlarmDetailScreenPreview(modifier: Modifier = Modifier) {
                 isLoading = false,
                 alarm = previewAlarm,
                 isValid = false
-            )
+            ),
+            onCloseClick = {}
         )
     }
 }

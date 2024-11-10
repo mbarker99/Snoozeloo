@@ -4,6 +4,9 @@ import kotlinx.serialization.Serializable
 
 sealed interface Destination {
     @Serializable
+    data object AlarmsGraph : Destination
+
+    @Serializable
     data object AlarmListScreen : Destination
 
     @Serializable
