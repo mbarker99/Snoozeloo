@@ -1,4 +1,4 @@
-package com.embarkapps.snoozeloo.ui.theme
+package com.embarkapps.snoozeloo.alarms.presentation.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 
 private val LightColorScheme = lightColorScheme(
     primary = Blue80,
-    surfaceContainer = Gray
+    background = Gray,
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),

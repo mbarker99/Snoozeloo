@@ -21,8 +21,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.embarkapps.snoozeloo.ui.theme.SnoozelooTheme
-import com.embarkapps.snoozeloo.ui.theme.montserratFontFamily
+import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.SnoozelooTheme
+import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.montserratFontFamily
 
 @Composable
 fun TimeCard(
@@ -51,7 +51,7 @@ fun TimeCard(
                 modifier = Modifier
                     .width(128.dp),
                 shape = RoundedCornerShape(10.dp),
-                color = MaterialTheme.colorScheme.surfaceContainer,
+                color = MaterialTheme.colorScheme.background,
 
                 ) {
                 BasicTextField(
@@ -74,7 +74,7 @@ fun TimeCard(
                 modifier = Modifier
                     .width(128.dp),
                 shape = RoundedCornerShape(10.dp),
-                color = MaterialTheme.colorScheme.surfaceContainer
+                color = MaterialTheme.colorScheme.background
             ) {
                 BasicTextField(
                     state = TextFieldState(

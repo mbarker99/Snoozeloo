@@ -1,5 +1,6 @@
 package com.embarkapps.snoozeloo.alarms.presentation.alarmlist
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -24,8 +26,8 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.components.AlarmCard
-import com.embarkapps.snoozeloo.ui.theme.SnoozelooTheme
-import com.embarkapps.snoozeloo.ui.theme.montserratFontFamily
+import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.SnoozelooTheme
+import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.montserratFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,7 +62,9 @@ fun AlarmListScreen(
                 containerColor = Color(0xFF4664FF),
                 contentColor = Color.White
             )
-        }
+        },
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.background)
     ) { paddingValues ->
         if (state.alarms.isNotEmpty()) {
             LazyColumn(

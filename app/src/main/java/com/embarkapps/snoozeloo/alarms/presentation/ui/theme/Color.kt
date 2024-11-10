@@ -1,4 +1,4 @@
-package com.embarkapps.snoozeloo.ui.theme
+package com.embarkapps.snoozeloo.alarms.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

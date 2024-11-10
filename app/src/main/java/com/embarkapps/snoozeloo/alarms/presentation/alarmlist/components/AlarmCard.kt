@@ -19,8 +19,8 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.embarkapps.snoozeloo.alarms.domain.model.Alarm
-import com.embarkapps.snoozeloo.ui.theme.SnoozelooTheme
-import com.embarkapps.snoozeloo.ui.theme.montserratFontFamily
+import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.SnoozelooTheme
+import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.montserratFontFamily
 import java.time.ZonedDateTime
 
 @Composable
