@@ -1,10 +1,10 @@
 package com.embarkapps.snoozeloo.alarms.presentation.alarmdetail
 
-import com.embarkapps.snoozeloo.alarms.domain.model.Alarm
-
 data class AlarmDetailState(
     val isLoading: Boolean = false,
-    val alarm: Alarm,
+    val hour: Int = 0,
+    val minute: Int = 0,
+    val title: String = "",
     val isExtended: Boolean = false,
     val isValid: Boolean = false
 )

@@ -13,7 +13,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.embarkapps.snoozeloo.alarms.presentation.alarmdetail.AlarmDetailScreen
-import com.embarkapps.snoozeloo.alarms.presentation.alarmdetail.components.AlarmDetailViewModel
 import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.AlarmListScreen
 import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.AlarmListViewModel
 import com.embarkapps.snoozeloo.core.domain.navigation.NavigationAction
@@ -42,7 +41,7 @@ fun NavGraph(navigator: Navigator) {
             navigation<Destination.AlarmsGraph>(startDestination = Destination.AlarmListScreen) {
                 composable<Destination.AlarmListScreen> {
                     val viewModel = hiltViewModel<AlarmListViewModel>()
-                    val state by viewModel.state.collectAsStateWithLifecycle()
+                    val state by viewModel.listState.collectAsStateWithLifecycle()
                     AlarmListScreen(
                         state = state,
                         onEvent = viewModel::eventHandler
@@ -50,11 +49,11 @@ fun NavGraph(navigator: Navigator) {
                 }
 
                 composable<Destination.AlarmDetailScreen> {
-                    val viewModel = hiltViewModel<AlarmDetailViewModel>()
-                    val state by viewModel.state.collectAsStateWithLifecycle()
+                    val viewModel = hiltViewModel<AlarmListViewModel>()
+                    val state by viewModel.detailState.collectAsStateWithLifecycle()
                     AlarmDetailScreen(
                         state = state,
-                        onCloseClick = { navController.navigateUp() }
+                        onEvent = viewModel::eventHandler
                     )
                 }
             }

@@ -3,6 +3,7 @@ package com.embarkapps.snoozeloo.alarms.presentation.alarmdetail
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.embarkapps.snoozeloo.alarms.presentation.alarmdetail.components.AlarmNameCard
 import com.embarkapps.snoozeloo.alarms.presentation.alarmdetail.components.TimeCard
+import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.AlarmListUiEvent
 import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.components.previewAlarm
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.SnoozelooTheme
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.montserratFontFamily
@@ -37,7 +41,7 @@ import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.montserratFontFamil
 @Composable
 fun AlarmDetailScreen(
     state: AlarmDetailState,
-    onCloseClick: () -> Unit,
+    onEvent: (AlarmListUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val closeButtonColors = IconButtonDefaults.iconButtonColors().copy(
@@ -52,6 +56,13 @@ fun AlarmDetailScreen(
         contentColor = Color.White,
         disabledContainerColor = Color(0xFFE6E6E6),
         disabledContentColor = Color.White
+    )
+
+    val cardColors = CardDefaults.cardColors().copy(
+        containerColor = Color.White,
+        contentColor = Color.Black,
+        disabledContainerColor = Color.White,
+        disabledContentColor = Color.Black
     )
 
     Column(
@@ -70,10 +81,11 @@ fun AlarmDetailScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(
-                onClick = { onCloseClick() },
+                onClick = { onEvent(AlarmListUiEvent.OnCloseClicked) },
                 enabled = true,
                 colors = saveButtonColors,
                 shape = RoundedCornerShape(10.dp),
+                contentPadding = PaddingValues(0.dp),
                 modifier = Modifier
                     .height(32.dp)
                     .width(32.dp)
@@ -87,8 +99,8 @@ fun AlarmDetailScreen(
             }
 
             Button(
-                onClick = { },
-                enabled = state.isValid,
+                onClick = { onEvent(AlarmListUiEvent.OnAlarmSaved(alarm = previewAlarm.toAlarmEntity())) },
+                enabled = true,
                 colors = saveButtonColors,
                 content = {
                     Text(
@@ -106,15 +118,27 @@ fun AlarmDetailScreen(
 
         }
 
-        TimeCard(
-            hour = state.alarm.time.hour,
-            minute = state.alarm.time.minute,
-        )
+        Card(
+            colors = cardColors,
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(10.dp)
+        ) {
+            TimeCard(
+                hour = state.hour,
+                minute = state.minute,
+            )
+        }
 
-        AlarmNameCard(
-            title = state.alarm.title,
-        )
-
+        Card(
+            colors = cardColors,
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(10.dp)
+        ) {
+            AlarmNameCard(
+                title = state.title,
+                onTitleChanged = { onEvent(AlarmListUiEvent.OnTitleChanged(it)) }
+            )
+        }
         if (state.isExtended) {
             // TODO : add additional logic here
         }
@@ -130,10 +154,13 @@ fun AlarmDetailScreenPreview(modifier: Modifier = Modifier) {
         AlarmDetailScreen(
             state = AlarmDetailState(
                 isLoading = false,
-                alarm = previewAlarm,
-                isValid = false
+                isValid = false,
+                hour = 3,
+                minute = 30,
+                title = "Work",
+                isExtended = false
             ),
-            onCloseClick = {}
+            onEvent = {}
         )
     }
 }

@@ -23,7 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.components.AlarmCard
@@ -109,7 +109,7 @@ fun AlarmListScreen(
 
 }
 
-@PreviewLightDark
+@Preview
 @Composable
 fun AlarmListScreenPreview(modifier: Modifier = Modifier) {
     SnoozelooTheme {
@@ -126,6 +126,6 @@ fun AlarmListScreenPreview(modifier: Modifier = Modifier) {
 
 /*
 alarms = (1..5).map {
-                    previewAlarm.copy(id = it)
-                }
+    previewAlarm.copy(id = it)
+}
 */

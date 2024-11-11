@@ -15,14 +15,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.embarkapps.snoozeloo.alarms.data.model.AlarmEntity
 import com.embarkapps.snoozeloo.alarms.domain.model.Alarm
 import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.AlarmListUiEvent
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.SnoozelooTheme
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.montserratFontFamily
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun AlarmCard(
@@ -69,16 +71,19 @@ fun AlarmCard(
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     // TODO : implement time calculation here
+                    val formatter = DateTimeFormatter.ofPattern("HH:MM")
+                    val formattedTime = alarm.time.format(formatter)
                     Text(
-                        text = "10:00",
+                        text = formattedTime,
                         fontSize = 42.sp,
                         fontWeight = FontWeight.SemiBold,
                         lineHeight = 51.2.sp,
                         fontFamily = montserratFontFamily,
                     )
-
+                    val zoneFormatter = DateTimeFormatter.ofPattern("a")
+                    val formattedAMPM = alarm.time.format(zoneFormatter)
                     Text(
-                        text = "AM",
+                        text = formattedAMPM,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.SemiBold,
                         lineHeight = 29.26.sp,
@@ -89,7 +94,7 @@ fun AlarmCard(
 
                 // TODO : calculate remaining time here
                 Text(
-                    text = "Alarm in 5h 30min",
+                    text = "Alarm in",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
                     lineHeight = 17.07.sp,
@@ -109,7 +114,7 @@ fun AlarmCard(
 
 }
 
-@PreviewLightDark
+@Preview
 @Composable
 private fun AlarmCardPreview() {
     SnoozelooTheme {
@@ -122,9 +127,10 @@ private fun AlarmCardPreview() {
 
 }
 
-internal val previewAlarm = Alarm(
+internal val previewAlarm = AlarmEntity(
     id = 1,
     title = "Wake up",
     isEnabled = true,
-    time = LocalDateTime.now()
-)
+    hour = LocalDateTime.now().hour,
+    minute = LocalDateTime.now().minute
+).toAlarm()
