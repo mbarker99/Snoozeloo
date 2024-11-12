@@ -1,5 +1,6 @@
 package com.embarkapps.snoozeloo.alarms.data.repository
 
+import android.util.Log
 import com.embarkapps.snoozeloo.alarms.data.db.AlarmDatabase
 import com.embarkapps.snoozeloo.alarms.data.model.AlarmEntity
 import com.embarkapps.snoozeloo.alarms.domain.repository.AlarmRepository
@@ -14,5 +15,8 @@ class AlarmRepositoryImpl @Inject constructor(
         emit(db.alarmDao().getAllAlarms())
     }
 
-    override suspend fun insertAll(vararg alarms: AlarmEntity) = db.alarmDao().insertAll(*alarms)
+    override suspend fun insertAll(vararg alarms: AlarmEntity) {
+        db.alarmDao().insertAll(*alarms)
+        Log.d("AlarmRepostory", "inserted")
+    }
 }

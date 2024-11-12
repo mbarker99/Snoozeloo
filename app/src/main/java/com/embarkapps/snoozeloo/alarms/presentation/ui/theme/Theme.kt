@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 )*/
 
 private val LightColorScheme = lightColorScheme(
-    primary = Blue80,
+    primary = BluePrimary,
     background = Gray,
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

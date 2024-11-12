@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.sp
 import com.embarkapps.snoozeloo.alarms.data.model.AlarmEntity
 import com.embarkapps.snoozeloo.alarms.domain.model.Alarm
 import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.AlarmListUiEvent
+import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.BlueDisabled
+import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.BluePrimary
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.SnoozelooTheme
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.montserratFontFamily
 import java.time.LocalDateTime
@@ -43,7 +45,11 @@ fun AlarmCard(
 
     val switchColors = SwitchDefaults.colors().copy(
         checkedThumbColor = Color.White,
-        checkedTrackColor = Color(0xFF4664FF)
+        checkedTrackColor = BluePrimary,
+        checkedBorderColor = BluePrimary,
+        uncheckedThumbColor = Color.White,
+        uncheckedTrackColor = BlueDisabled,
+        uncheckedBorderColor = BlueDisabled
     )
 
     Card(
@@ -70,8 +76,7 @@ fun AlarmCard(
                     verticalAlignment = Alignment.Bottom,
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    // TODO : implement time calculation here
-                    val formatter = DateTimeFormatter.ofPattern("HH:MM")
+                    val formatter = DateTimeFormatter.ofPattern("hh:mm")
                     val formattedTime = alarm.time.format(formatter)
                     Text(
                         text = formattedTime,
@@ -128,7 +133,6 @@ private fun AlarmCardPreview() {
 }
 
 internal val previewAlarm = AlarmEntity(
-    id = 1,
     title = "Wake up",
     isEnabled = true,
     hour = LocalDateTime.now().hour,

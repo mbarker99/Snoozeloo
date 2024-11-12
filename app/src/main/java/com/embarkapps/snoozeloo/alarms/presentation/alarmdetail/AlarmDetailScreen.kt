@@ -31,10 +31,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.embarkapps.snoozeloo.alarms.data.model.AlarmEntity
 import com.embarkapps.snoozeloo.alarms.presentation.alarmdetail.components.AlarmNameCard
 import com.embarkapps.snoozeloo.alarms.presentation.alarmdetail.components.TimeCard
 import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.AlarmListUiEvent
-import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.components.previewAlarm
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.SnoozelooTheme
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.montserratFontFamily
 
@@ -99,8 +99,19 @@ fun AlarmDetailScreen(
             }
 
             Button(
-                onClick = { onEvent(AlarmListUiEvent.OnAlarmSaved(alarm = previewAlarm.toAlarmEntity())) },
-                enabled = true,
+                onClick = {
+                    onEvent(
+                        AlarmListUiEvent.OnAlarmSaved(
+                            alarm = AlarmEntity(
+                                title = state.title,
+                                isEnabled = true,
+                                hour = state.hour,
+                                minute = state.minute,
+                            )
+                        )
+                    )
+                },
+                enabled = state.isValid,
                 colors = saveButtonColors,
                 content = {
                     Text(
@@ -118,16 +129,14 @@ fun AlarmDetailScreen(
 
         }
 
-        Card(
-            colors = cardColors,
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(10.dp)
-        ) {
-            TimeCard(
-                hour = state.hour,
-                minute = state.minute,
-            )
-        }
+
+        TimeCard(
+            hour = state.hour,
+            minute = state.minute,
+            onHourChanged = { onEvent(AlarmListUiEvent.OnHourChanged(it)) },
+            onMinuteChanged = { onEvent(AlarmListUiEvent.OnMinuteChanged(it)) }
+        )
+
 
         Card(
             colors = cardColors,

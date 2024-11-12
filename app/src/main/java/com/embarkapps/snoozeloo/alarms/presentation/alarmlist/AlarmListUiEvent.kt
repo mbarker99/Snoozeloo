@@ -10,6 +10,8 @@ sealed interface AlarmListUiEvent {
 
     // AlarmDetailScreen
     data object OnCloseClicked : AlarmListUiEvent
-    data class OnAlarmSaved(val alarm: AlarmEntity) : AlarmListUiEvent
     data class OnTitleChanged(val title: String) : AlarmListUiEvent
+    data class OnHourChanged(val hour: String) : AlarmListUiEvent
+    data class OnMinuteChanged(val minute: String) : AlarmListUiEvent
+    data class OnAlarmSaved(val alarm: AlarmEntity) : AlarmListUiEvent
 }
