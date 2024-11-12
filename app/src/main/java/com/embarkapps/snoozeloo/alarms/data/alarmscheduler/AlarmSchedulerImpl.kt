@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import com.embarkapps.snoozeloo.alarms.domain.alarmscheduler.AlarmScheduler
 import com.embarkapps.snoozeloo.alarms.domain.model.Alarm
-import java.time.ZoneId
 
 class AlarmSchedulerImpl(
     private val context: Context
@@ -20,7 +19,7 @@ class AlarmSchedulerImpl(
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("EXTRA_TITLE", item.title)
         }
-        alarmManager.setExactAndAllowWhileIdle(
+        /*alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             item.time.atZone(ZoneId.systemDefault()).toEpochSecond() * 1000,
             PendingIntent.getBroadcast(
@@ -29,7 +28,7 @@ class AlarmSchedulerImpl(
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
-        )
+        )*/
     }
 
     override fun cancel(item: Alarm) {

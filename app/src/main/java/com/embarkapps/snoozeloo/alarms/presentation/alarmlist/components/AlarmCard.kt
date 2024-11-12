@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.embarkapps.snoozeloo.alarms.data.model.AlarmEntity
+import com.embarkapps.snoozeloo.alarms.data.model.toAlarm
 import com.embarkapps.snoozeloo.alarms.domain.model.Alarm
 import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.AlarmListUiEvent
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.BlueDisabled
@@ -26,7 +27,6 @@ import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.BluePrimary
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.SnoozelooTheme
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.montserratFontFamily
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun AlarmCard(
@@ -54,6 +54,7 @@ fun AlarmCard(
 
     Card(
         colors = cardColors,
+        onClick = { onEvent(AlarmListUiEvent.OnAlarmClicked(alarm)) },
         modifier = Modifier
             .fillMaxWidth()
     ) {
@@ -76,8 +77,9 @@ fun AlarmCard(
                     verticalAlignment = Alignment.Bottom,
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    val formatter = DateTimeFormatter.ofPattern("hh:mm")
-                    val formattedTime = alarm.time.format(formatter)
+                    /*val formatter = DateTimeFormatter.ofPattern("hh:mm")
+                    val formattedTime = alarm.time.format(formatter)*/
+                    val formattedTime = "${alarm.hour}:${alarm.minute}"
                     Text(
                         text = formattedTime,
                         fontSize = 42.sp,
@@ -85,8 +87,9 @@ fun AlarmCard(
                         lineHeight = 51.2.sp,
                         fontFamily = montserratFontFamily,
                     )
-                    val zoneFormatter = DateTimeFormatter.ofPattern("a")
-                    val formattedAMPM = alarm.time.format(zoneFormatter)
+                    /*val zoneFormatter = DateTimeFormatter.ofPattern("a")
+                    val formattedAMPM = alarm.time.format(zoneFormatter)*/
+                    val formattedAMPM = if (alarm.hour.toInt() <= 12) "AM" else "PM"
                     Text(
                         text = formattedAMPM,
                         fontSize = 24.sp,
@@ -135,6 +138,5 @@ private fun AlarmCardPreview() {
 internal val previewAlarm = AlarmEntity(
     title = "Wake up",
     isEnabled = true,
-    hour = LocalDateTime.now().hour,
-    minute = LocalDateTime.now().minute
+    time = LocalDateTime.now(),
 ).toAlarm()

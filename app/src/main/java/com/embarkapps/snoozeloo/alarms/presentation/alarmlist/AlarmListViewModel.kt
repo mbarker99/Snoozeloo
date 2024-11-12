@@ -3,8 +3,9 @@ package com.embarkapps.snoozeloo.alarms.presentation.alarmlist
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.embarkapps.snoozeloo.alarms.data.model.AlarmEntity
+import com.embarkapps.snoozeloo.alarms.data.model.toAlarm
 import com.embarkapps.snoozeloo.alarms.domain.model.Alarm
+import com.embarkapps.snoozeloo.alarms.domain.model.toAlarmEntity
 import com.embarkapps.snoozeloo.alarms.domain.repository.AlarmRepository
 import com.embarkapps.snoozeloo.alarms.presentation.alarmdetail.AlarmDetailState
 import com.embarkapps.snoozeloo.core.domain.navigation.Navigator
@@ -65,14 +66,11 @@ class AlarmListViewModel @Inject constructor(
 
     private fun updateAlarmsList(alarm: Alarm) {
         val newList = _listState.value.alarms.toMutableList()
+        val newAlarm = newList.find { listAlarm -> alarm.id == listAlarm.id }
+        val updatedAlarm = newAlarm?.copy(isEnabled = !newAlarm.isEnabled)
         for (i in newList.indices) {
             if (newList[i] == alarm) {
-                newList[i] = Alarm(
-                    id = alarm.id,
-                    title = alarm.title,
-                    time = alarm.time,
-                    isEnabled = !alarm.isEnabled
-                )
+                newList[i] = updatedAlarm!!
                 Log.d("AlarmListViewModel", "isEnabled: ${newList[i].isEnabled}")
             }
         }
@@ -82,6 +80,11 @@ class AlarmListViewModel @Inject constructor(
                 alarms = newList
             )
         }
+
+        viewModelScope.launch {
+            repository.upsertAll(updatedAlarm!!.toAlarmEntity())
+        }
+
     }
 
     fun eventHandler(alarmListUiEvent: AlarmListUiEvent) {
@@ -89,6 +92,19 @@ class AlarmListViewModel @Inject constructor(
             when (alarmListUiEvent) {
                 AlarmListUiEvent.OnAddAlarmClicked -> {
                     Log.d(TAG, "onAddAlarmClicked")
+                    navigator.navigate(Destination.AlarmDetailScreen)
+                }
+
+                is AlarmListUiEvent.OnAlarmClicked -> {
+                    _detailState.update {
+                        it.copy(
+                            selectedAlarm = alarmListUiEvent.alarm,
+                            hour = alarmListUiEvent.alarm.hour,
+                            minute = alarmListUiEvent.alarm.minute,
+                            title = alarmListUiEvent.alarm.title,
+                            isExtended = false,
+                        )
+                    }
                     navigator.navigate(Destination.AlarmDetailScreen)
                 }
 
@@ -113,29 +129,26 @@ class AlarmListViewModel @Inject constructor(
                     checkValidity()
                 }
 
-                is AlarmListUiEvent.OnHourChanged -> {
+                is AlarmListUiEvent.OnTimeSelected -> {
                     _detailState.update {
                         it.copy(
-                            hour = alarmListUiEvent.hour.toInt()
+                            hour = alarmListUiEvent.hour,
+                            minute = alarmListUiEvent.minute
                         )
                     }
-                    checkValidity()
-                }
-
-                is AlarmListUiEvent.OnMinuteChanged -> {
-                    _detailState.update {
-                        it.copy(
-                            minute = alarmListUiEvent.minute.toInt()
-                        )
-                    }
-                    checkValidity()
                 }
             }
         }
     }
 
+    // TODO : form validation - app crashes when title is inputted before time
     private fun checkValidity() {
-        if (_detailState.value.title.isNotEmpty()) {
+        val validHour = if (_detailState.value.hour == "") "0" else _detailState.value.hour
+        val validMinute = if (_detailState.value.minute == "") "0" else _detailState.value.minute
+        if (_detailState.value.title.isNotEmpty()
+            && validHour.toInt() <= 24
+            && validMinute.toInt() <= 59
+        ) {
             _detailState.update {
                 it.copy(
                     isValid = true
@@ -150,9 +163,17 @@ class AlarmListViewModel @Inject constructor(
         }
     }
 
-    private fun saveAlarm(alarm: AlarmEntity) {
+    private fun saveAlarm(alarm: Alarm) {
         viewModelScope.launch {
-            repository.insertAll(alarm)
+            if (alarm.id == 0L) {
+                repository.upsertAll(alarm.toAlarmEntity())
+            } else {
+                repository.upsertAll(
+                    alarm.copy(
+                        id = _detailState.value.selectedAlarm?.id ?: 0L
+                    ).toAlarmEntity()
+                )
+            }
             navigator.navigateUp()
         }
     }

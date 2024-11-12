@@ -7,33 +7,31 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.Gray
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.SnoozelooTheme
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.montserratFontFamily
 
 @Composable
 fun TimeCard(
-    hour: Int,
-    minute: Int,
-    onHourChanged: (String) -> Unit,
-    onMinuteChanged: (String) -> Unit,
+    hour: String,
+    minute: String,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val cardColors = CardDefaults.cardColors().copy(
@@ -43,9 +41,26 @@ fun TimeCard(
         disabledContentColor = Color.Black
     )
 
+    val timeTextStyle = TextStyle(
+        color = Color(0xFF858585),
+        fontSize = 52.sp,
+        fontWeight = FontWeight.SemiBold,
+        fontFamily = montserratFontFamily,
+        lineHeight = 63.39.sp,
+        textAlign = TextAlign.Center
+    )
+
+    val textFieldColors = TextFieldDefaults.colors().copy(
+        focusedContainerColor = Gray,
+        unfocusedContainerColor = Gray,
+        focusedIndicatorColor = Gray,
+        unfocusedIndicatorColor = Gray
+    )
+
     Card(
         colors = cardColors,
         modifier = Modifier.fillMaxWidth(),
+        onClick = { onClick() },
         shape = RoundedCornerShape(10.dp)
     ) {
         Row(
@@ -63,19 +78,10 @@ fun TimeCard(
 
                 ) {
 
-                TextField(
-                    value = hour.toString(),
-                    onValueChange = { onHourChanged(it) },
-                    textStyle = TextStyle(
-                        color = Color(0xFF858585),
-                        fontSize = 52.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = montserratFontFamily,
-                        lineHeight = 63.39.sp,
-                        textAlign = TextAlign.Center,
-                    ),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.padding(vertical = 24.dp),
+                Text(
+                    text = hour,
+                    style = timeTextStyle,
+                    modifier = Modifier.padding(vertical = 24.dp)
                 )
             }
 
@@ -87,7 +93,6 @@ fun TimeCard(
                     fontSize = 32.sp,
                     fontWeight = FontWeight.SemiBold,
                     fontFamily = montserratFontFamily,
-                    textAlign = TextAlign.Center
                 )
             )
             Spacer(modifier = Modifier.padding(4.dp))
@@ -98,19 +103,10 @@ fun TimeCard(
                 shape = RoundedCornerShape(10.dp),
                 color = MaterialTheme.colorScheme.background
             ) {
-                TextField(
-                    value = minute.toString(),
-                    onValueChange = { onMinuteChanged(it) },
-                    textStyle = TextStyle(
-                        color = Color(0xFF858585),
-                        fontSize = 52.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = montserratFontFamily,
-                        lineHeight = 63.39.sp,
-                        textAlign = TextAlign.Center
-                    ),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.padding(vertical = 24.dp),
+                Text(
+                    text = minute,
+                    style = timeTextStyle,
+                    modifier = Modifier.padding(vertical = 24.dp)
                 )
             }
         }
@@ -124,10 +120,9 @@ fun TimeCard(
 fun TimeCardPreview() {
     SnoozelooTheme {
         TimeCard(
-            hour = 3,
-            minute = 30,
-            onHourChanged = {},
-            onMinuteChanged = {}
+            hour = "03",
+            minute = "05",
+            onClick = {}
         )
     }
 }

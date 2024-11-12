@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface AlarmRepository {
     suspend fun getAllAlarms(): Flow<List<AlarmEntity>>
-    suspend fun insertAll(vararg alarms: AlarmEntity)
+    suspend fun upsertAll(vararg alarms: AlarmEntity)
 }
