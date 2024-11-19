@@ -77,19 +77,14 @@ fun AlarmCard(
                     verticalAlignment = Alignment.Bottom,
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    /*val formatter = DateTimeFormatter.ofPattern("hh:mm")
-                    val formattedTime = alarm.time.format(formatter)*/
-                    val formattedTime = "${alarm.hour}:${alarm.minute}"
                     Text(
-                        text = formattedTime,
+                        text = "${alarm.hour.formattedValue}:${alarm.minute.formattedValue}",
                         fontSize = 42.sp,
                         fontWeight = FontWeight.SemiBold,
                         lineHeight = 51.2.sp,
                         fontFamily = montserratFontFamily,
                     )
-                    /*val zoneFormatter = DateTimeFormatter.ofPattern("a")
-                    val formattedAMPM = alarm.time.format(zoneFormatter)*/
-                    val formattedAMPM = if (alarm.hour.toInt() <= 12) "AM" else "PM"
+                    val formattedAMPM = if (alarm.isAm) "AM" else "PM"
                     Text(
                         text = formattedAMPM,
                         fontSize = 24.sp,

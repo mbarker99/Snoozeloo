@@ -5,11 +5,49 @@ import java.time.LocalDateTime
 
 data class Alarm(
     val title: String,
-    val hour: String,
-    val minute: String,
+    val hour: FormattedTime,
+    val minute: FormattedTime,
+    val isAm: Boolean,
     val isEnabled: Boolean,
     val id: Long = 0L,
 )
+
+data class FormattedTime(
+    val type: String,
+    val value: Int,
+    val formattedValue: String
+)
+
+fun Int.toFormattedTime(type: String): FormattedTime {
+    var formattedValue = ""
+    when (type) {
+        "hour" -> {
+            formattedValue = when (this) {
+                0 -> "12"
+                in 1..9 -> "0$this"
+                in 10..12 -> this.toString()
+                in 13..21 -> "0${this - 12}"
+                else -> (this - 12).toString()
+            }
+
+        }
+
+        "minute" -> {
+            formattedValue =
+                if (this < 10)
+                    "0$this"
+                else
+                    this.toString()
+        }
+
+        else -> {}
+    }
+    return FormattedTime(
+        type = type,
+        value = this,
+        formattedValue = formattedValue
+    )
+}
 
 fun Alarm.toAlarmEntity(): AlarmEntity {
     val currentTime = LocalDateTime.now()
@@ -17,8 +55,8 @@ fun Alarm.toAlarmEntity(): AlarmEntity {
         currentTime.year,
         currentTime.month,
         currentTime.dayOfMonth,
-        hour.toInt(),
-        minute.toInt()
+        hour.value,
+        minute.value
     )
     return AlarmEntity(
         title = title,

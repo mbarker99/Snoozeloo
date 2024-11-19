@@ -3,6 +3,7 @@ package com.embarkapps.snoozeloo.alarms.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.embarkapps.snoozeloo.alarms.domain.model.Alarm
+import com.embarkapps.snoozeloo.alarms.domain.model.toFormattedTime
 import com.embarkapps.snoozeloo.core.domain.Constants
 import java.time.LocalDateTime
 
@@ -16,12 +17,12 @@ data class AlarmEntity(
 )
 
 fun AlarmEntity.toAlarm(): Alarm {
-    val formattedHour = if (time.hour < 10) "0${time.hour}" else time.hour
-    val formattedMinute = if (time.minute < 10) "0${time.minute}" else time.minute
+    val isAm = !(time.hour >= 12 && time.hour != 0)
     return Alarm(
         title = title,
-        hour = formattedHour.toString(),
-        minute = formattedMinute.toString(),
+        hour = time.hour.toFormattedTime("hour"),
+        minute = time.minute.toFormattedTime("minute"),
+        isAm = isAm,
         isEnabled = isEnabled,
         id = id
     )

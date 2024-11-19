@@ -97,10 +97,19 @@ class AlarmListViewModel @Inject constructor(
 
                 is AlarmListUiEvent.OnAlarmClicked -> {
                     _detailState.update {
+                        println(
+                            it.copy(
+                                selectedAlarm = alarmListUiEvent.alarm,
+                                hour = alarmListUiEvent.alarm.hour.formattedValue,
+                                minute = alarmListUiEvent.alarm.minute.formattedValue,
+                                title = alarmListUiEvent.alarm.title,
+                                isExtended = false,
+                            ).toString()
+                        )
                         it.copy(
                             selectedAlarm = alarmListUiEvent.alarm,
-                            hour = alarmListUiEvent.alarm.hour,
-                            minute = alarmListUiEvent.alarm.minute,
+                            hour = alarmListUiEvent.alarm.hour.formattedValue,
+                            minute = alarmListUiEvent.alarm.minute.formattedValue,
                             title = alarmListUiEvent.alarm.title,
                             isExtended = false,
                         )

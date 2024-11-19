@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.embarkapps.snoozeloo.alarms.domain.model.Alarm
+import com.embarkapps.snoozeloo.alarms.domain.model.toFormattedTime
 import com.embarkapps.snoozeloo.alarms.presentation.alarmdetail.components.AlarmNameCard
 import com.embarkapps.snoozeloo.alarms.presentation.alarmdetail.components.TimeCard
 import com.embarkapps.snoozeloo.alarms.presentation.alarmdetail.components.TimePickerDialog
@@ -46,7 +47,9 @@ import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.montserratFontFamil
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlarmDetailScreen(
-    state: AlarmDetailState, onEvent: (AlarmListUiEvent) -> Unit, modifier: Modifier = Modifier
+    state: AlarmDetailState,
+    onEvent: (AlarmListUiEvent) -> Unit,
+    modifier: Modifier = Modifier
 ) {
 
     val openAlertDialog = remember { mutableStateOf(false) }
@@ -103,8 +106,9 @@ fun AlarmDetailScreen(
                     AlarmListUiEvent.OnAlarmSaved(
                         Alarm(
                             title = state.title,
-                            hour = state.hour,
-                            minute = state.minute,
+                            hour = state.hour.toInt().toFormattedTime("hour"),
+                            minute = state.minute.toInt().toFormattedTime("minute"),
+                            isAm = !(state.hour.toInt() >= 12 && state.hour.toInt() != 0),
                             isEnabled = true,
                         )
                     )
@@ -125,8 +129,8 @@ fun AlarmDetailScreen(
 
 
         TimeCard(
-            hour = state.hour,
-            minute = state.minute,
+            hour = state.minute.toInt().toFormattedTime("minute").formattedValue,
+            minute = state.minute.toInt().toFormattedTime("minute").formattedValue,
             onClick = { openAlertDialog.value = true }
         )
 
@@ -166,7 +170,7 @@ fun AlarmDetailScreenPreview(modifier: Modifier = Modifier) {
         AlarmDetailScreen(state = AlarmDetailState(
             isLoading = false,
             isValid = false,
-            hour = "3",
+            hour = "03",
             minute = "30",
             title = "Work",
             isExtended = false,
