@@ -23,6 +23,8 @@ import com.embarkapps.snoozeloo.core.domain.navigation.Navigator
 fun NavGraph(navigator: Navigator) {
     Scaffold(modifier = Modifier.fillMaxSize()) {
         val navController = rememberNavController()
+        val viewModel = hiltViewModel<AlarmListViewModel>()
+        val state by viewModel.state.collectAsStateWithLifecycle()
 
         ObserveAsEvents(flow = navigator.navActions) { action ->
             when (action) {
@@ -40,8 +42,6 @@ fun NavGraph(navigator: Navigator) {
         ) {
             navigation<Destination.AlarmsGraph>(startDestination = Destination.AlarmListScreen) {
                 composable<Destination.AlarmListScreen> {
-                    val viewModel = hiltViewModel<AlarmListViewModel>()
-                    val state by viewModel.listState.collectAsStateWithLifecycle()
                     AlarmListScreen(
                         state = state,
                         onEvent = viewModel::eventHandler
@@ -49,8 +49,6 @@ fun NavGraph(navigator: Navigator) {
                 }
 
                 composable<Destination.AlarmDetailScreen> {
-                    val viewModel = hiltViewModel<AlarmListViewModel>()
-                    val state by viewModel.detailState.collectAsStateWithLifecycle()
                     AlarmDetailScreen(
                         state = state,
                         onEvent = viewModel::eventHandler

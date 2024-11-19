@@ -4,17 +4,19 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.embarkapps.snoozeloo.alarms.data.model.toAlarm
-import com.embarkapps.snoozeloo.alarms.domain.model.Alarm
-import com.embarkapps.snoozeloo.alarms.domain.model.toAlarmEntity
+import com.embarkapps.snoozeloo.alarms.data.model.toAlarmEntity
 import com.embarkapps.snoozeloo.alarms.domain.repository.AlarmRepository
-import com.embarkapps.snoozeloo.alarms.presentation.alarmdetail.AlarmDetailState
+import com.embarkapps.snoozeloo.alarms.presentation.model.AlarmUi
+import com.embarkapps.snoozeloo.alarms.presentation.model.toAlarm
+import com.embarkapps.snoozeloo.alarms.presentation.model.toAlarmUi
+import com.embarkapps.snoozeloo.alarms.presentation.model.toFormattedTime
+import com.embarkapps.snoozeloo.core.domain.Constants
 import com.embarkapps.snoozeloo.core.domain.navigation.Navigator
 import com.embarkapps.snoozeloo.core.presentation.navigation.Destination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -36,8 +38,8 @@ class AlarmListViewModel @Inject constructor(
         loadAlarms()
     }
 
-    private val _listState = MutableStateFlow(AlarmListState())
-    val listState = _listState
+    private val _state = MutableStateFlow(AlarmListState())
+    val state = _state
         .onStart { loadAlarms() }
         .stateIn(
             viewModelScope,
@@ -50,10 +52,10 @@ class AlarmListViewModel @Inject constructor(
             repository.getAllAlarms()
                 .flowOn(Dispatchers.IO)
                 .collect { alarms ->
-                    _listState.update { alarmEntities ->
+                    _state.update { alarmEntities ->
                         alarmEntities.copy(
                             alarms = alarms.map {
-                                it.toAlarm()
+                                it.toAlarm().toAlarmUi()
                             }
                         )
                     }
@@ -61,28 +63,24 @@ class AlarmListViewModel @Inject constructor(
         }
     }
 
-    private val _detailState = MutableStateFlow(AlarmDetailState())
-    val detailState: StateFlow<AlarmDetailState> = _detailState
-
-    private fun updateAlarmsList(alarm: Alarm) {
-        val newList = _listState.value.alarms.toMutableList()
-        val newAlarm = newList.find { listAlarm -> alarm.id == listAlarm.id }
+    private fun updateAlarmsList(alarmUi: AlarmUi) {
+        val newList = _state.value.alarms.toMutableList()
+        val newAlarm = newList.find { listAlarm -> alarmUi.id == listAlarm.id }
         val updatedAlarm = newAlarm?.copy(isEnabled = !newAlarm.isEnabled)
         for (i in newList.indices) {
-            if (newList[i] == alarm) {
+            if (newList[i] == alarmUi) {
                 newList[i] = updatedAlarm!!
-                Log.d("AlarmListViewModel", "isEnabled: ${newList[i].isEnabled}")
             }
         }
 
-        _listState.update { state ->
+        _state.update { state ->
             state.copy(
                 alarms = newList
             )
         }
 
         viewModelScope.launch {
-            repository.upsertAll(updatedAlarm!!.toAlarmEntity())
+            repository.upsertAll(updatedAlarm!!.toAlarm().toAlarmEntity())
         }
 
     }
@@ -91,34 +89,30 @@ class AlarmListViewModel @Inject constructor(
         viewModelScope.launch {
             when (alarmListUiEvent) {
                 AlarmListUiEvent.OnAddAlarmClicked -> {
-                    Log.d(TAG, "onAddAlarmClicked")
-                    navigator.navigate(Destination.AlarmDetailScreen)
-                }
-
-                is AlarmListUiEvent.OnAlarmClicked -> {
-                    _detailState.update {
-                        println(
-                            it.copy(
-                                selectedAlarm = alarmListUiEvent.alarm,
-                                hour = alarmListUiEvent.alarm.hour.formattedValue,
-                                minute = alarmListUiEvent.alarm.minute.formattedValue,
-                                title = alarmListUiEvent.alarm.title,
-                                isExtended = false,
-                            ).toString()
-                        )
+                    _state.update {
                         it.copy(
-                            selectedAlarm = alarmListUiEvent.alarm,
-                            hour = alarmListUiEvent.alarm.hour.formattedValue,
-                            minute = alarmListUiEvent.alarm.minute.formattedValue,
-                            title = alarmListUiEvent.alarm.title,
-                            isExtended = false,
+                            selectedAlarm = AlarmUi(
+                                title = "",
+                                hour = 0.toFormattedTime(Constants.HOUR),
+                                minute = 0.toFormattedTime(Constants.MINUTE),
+                                isAm = true,
+                                isEnabled = true,
+                                id = 0
+                            )
                         )
                     }
                     navigator.navigate(Destination.AlarmDetailScreen)
                 }
 
+                is AlarmListUiEvent.OnAlarmClicked -> {
+                    _state.update {
+                        it.copy(selectedAlarm = alarmListUiEvent.alarmUi)
+                    }
+                    navigator.navigate(Destination.AlarmDetailScreen)
+                }
+
                 is AlarmListUiEvent.OnAlarmEnableToggle -> {
-                    updateAlarmsList(alarmListUiEvent.alarm)
+                    updateAlarmsList(alarmListUiEvent.alarmUi)
                 }
 
                 is AlarmListUiEvent.OnAlarmSaved -> {
@@ -130,19 +124,33 @@ class AlarmListViewModel @Inject constructor(
                 }
 
                 is AlarmListUiEvent.OnTitleChanged -> {
-                    _detailState.update {
+                    Log.d(
+                        "eventHandler",
+                        "before: ${_state.value.selectedAlarm?.title ?: " no title"}"
+                    )
+                    _state.update {
                         it.copy(
-                            title = alarmListUiEvent.title
+                            selectedAlarm = it.selectedAlarm?.copy(
+                                title = alarmListUiEvent.title
+                            )
                         )
                     }
+                    Log.d(
+                        "eventHandler",
+                        "after: ${_state.value.selectedAlarm?.title ?: " no title"}"
+                    )
                     checkValidity()
                 }
 
                 is AlarmListUiEvent.OnTimeSelected -> {
-                    _detailState.update {
+                    _state.update {
                         it.copy(
-                            hour = alarmListUiEvent.hour,
-                            minute = alarmListUiEvent.minute
+                            selectedAlarm = it.selectedAlarm?.copy(
+                                hour = alarmListUiEvent.hour.toInt()
+                                    .toFormattedTime(Constants.HOUR),
+                                minute = alarmListUiEvent.minute.toInt()
+                                    .toFormattedTime(Constants.MINUTE)
+                            )
                         )
                     }
                 }
@@ -152,7 +160,7 @@ class AlarmListViewModel @Inject constructor(
 
     // TODO : form validation - app crashes when title is inputted before time
     private fun checkValidity() {
-        val validHour = if (_detailState.value.hour == "") "0" else _detailState.value.hour
+        /*val validHour = if (_state.value.hour == "") "0" else _detailState.value.hour
         val validMinute = if (_detailState.value.minute == "") "0" else _detailState.value.minute
         if (_detailState.value.title.isNotEmpty()
             && validHour.toInt() <= 24
@@ -169,18 +177,18 @@ class AlarmListViewModel @Inject constructor(
                     isValid = false
                 )
             }
-        }
+        }*/
     }
 
-    private fun saveAlarm(alarm: Alarm) {
+    private fun saveAlarm(alarmUi: AlarmUi) {
         viewModelScope.launch {
-            if (alarm.id == 0L) {
-                repository.upsertAll(alarm.toAlarmEntity())
+            if (alarmUi.id == 0L) {
+                repository.upsertAll(alarmUi.toAlarm().toAlarmEntity())
             } else {
                 repository.upsertAll(
-                    alarm.copy(
-                        id = _detailState.value.selectedAlarm?.id ?: 0L
-                    ).toAlarmEntity()
+                    alarmUi.copy(
+                        id = _state.value.selectedAlarm?.id ?: 0L
+                    ).toAlarm().toAlarmEntity()
                 )
             }
             navigator.navigateUp()

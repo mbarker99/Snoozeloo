@@ -18,10 +18,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.embarkapps.snoozeloo.alarms.data.model.AlarmEntity
-import com.embarkapps.snoozeloo.alarms.data.model.toAlarm
 import com.embarkapps.snoozeloo.alarms.domain.model.Alarm
 import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.AlarmListUiEvent
+import com.embarkapps.snoozeloo.alarms.presentation.model.AlarmUi
+import com.embarkapps.snoozeloo.alarms.presentation.model.toAlarmUi
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.BlueDisabled
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.BluePrimary
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.SnoozelooTheme
@@ -30,7 +30,7 @@ import java.time.LocalDateTime
 
 @Composable
 fun AlarmCard(
-    alarm: Alarm,
+    alarm: AlarmUi,
     isExtended: Boolean,
     onEvent: (AlarmListUiEvent) -> Unit,
     modifier: Modifier = Modifier
@@ -130,8 +130,9 @@ private fun AlarmCardPreview() {
 
 }
 
-internal val previewAlarm = AlarmEntity(
+internal val previewAlarm = Alarm(
     title = "Wake up",
     isEnabled = true,
     time = LocalDateTime.now(),
-).toAlarm()
+    id = 0,
+).toAlarmUi()
