@@ -40,11 +40,9 @@ import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.AlarmListState
 import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.AlarmListUiEvent
 import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.components.previewAlarm
 import com.embarkapps.snoozeloo.alarms.presentation.model.AlarmUi
-import com.embarkapps.snoozeloo.alarms.presentation.model.toFormattedTime
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.BluePrimary
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.SnoozelooTheme
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.montserratFontFamily
-import com.embarkapps.snoozeloo.core.domain.Constants
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,15 +68,6 @@ fun AlarmDetailScreen(
         contentColor = Color.Black,
         disabledContainerColor = Color.White,
         disabledContentColor = Color.Black
-    )
-
-    val sampleAlarm = AlarmUi(
-        title = "",
-        hour = 0.toFormattedTime(Constants.HOUR),
-        minute = 0.toFormattedTime(Constants.MINUTE),
-        isAm = true,
-        isEnabled = true,
-        id = 0
     )
 
     val alarm = state.selectedAlarm!!
