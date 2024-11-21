@@ -1,6 +1,5 @@
 package com.embarkapps.snoozeloo.alarms.presentation.alarmlist
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.embarkapps.snoozeloo.alarms.data.model.toAlarm
@@ -95,9 +94,7 @@ class AlarmListViewModel @Inject constructor(
                                 title = "",
                                 hour = 0.toFormattedTime(Constants.HOUR),
                                 minute = 0.toFormattedTime(Constants.MINUTE),
-                                isAm = true,
-                                isEnabled = true,
-                                id = 0
+                                isEnabled = true
                             )
                         )
                     }
@@ -108,6 +105,7 @@ class AlarmListViewModel @Inject constructor(
                     _state.update {
                         it.copy(selectedAlarm = alarmListUiEvent.alarmUi)
                     }
+                    checkValidity()
                     navigator.navigate(Destination.AlarmDetailScreen)
                 }
 
@@ -124,10 +122,6 @@ class AlarmListViewModel @Inject constructor(
                 }
 
                 is AlarmListUiEvent.OnTitleChanged -> {
-                    Log.d(
-                        "eventHandler",
-                        "before: ${_state.value.selectedAlarm?.title ?: " no title"}"
-                    )
                     _state.update {
                         it.copy(
                             selectedAlarm = it.selectedAlarm?.copy(
@@ -135,10 +129,6 @@ class AlarmListViewModel @Inject constructor(
                             )
                         )
                     }
-                    Log.d(
-                        "eventHandler",
-                        "after: ${_state.value.selectedAlarm?.title ?: " no title"}"
-                    )
                     checkValidity()
                 }
 
@@ -158,39 +148,30 @@ class AlarmListViewModel @Inject constructor(
         }
     }
 
-    // TODO : form validation - app crashes when title is inputted before time
     private fun checkValidity() {
-        /*val validHour = if (_state.value.hour == "") "0" else _detailState.value.hour
-        val validMinute = if (_detailState.value.minute == "") "0" else _detailState.value.minute
-        if (_detailState.value.title.isNotEmpty()
-            && validHour.toInt() <= 24
-            && validMinute.toInt() <= 59
-        ) {
-            _detailState.update {
+        if (!_state.value.selectedAlarm?.title.isNullOrEmpty()) {
+            _state.update {
                 it.copy(
                     isValid = true
                 )
             }
         } else {
-            _detailState.update {
+            _state.update {
                 it.copy(
                     isValid = false
                 )
             }
-        }*/
+        }
     }
 
     private fun saveAlarm(alarmUi: AlarmUi) {
         viewModelScope.launch {
-            if (alarmUi.id == 0L) {
-                repository.upsertAll(alarmUi.toAlarm().toAlarmEntity())
-            } else {
-                repository.upsertAll(
-                    alarmUi.copy(
-                        id = _state.value.selectedAlarm?.id ?: 0L
-                    ).toAlarm().toAlarmEntity()
-                )
-            }
+            repository.upsertAll(
+                alarmUi.copy(
+                    id = _state.value.selectedAlarm?.id ?: 0L
+                ).toAlarm().toAlarmEntity()
+            )
+            loadAlarms()
             navigator.navigateUp()
         }
     }

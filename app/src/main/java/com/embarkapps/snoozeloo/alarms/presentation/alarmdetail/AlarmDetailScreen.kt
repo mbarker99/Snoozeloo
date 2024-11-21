@@ -40,7 +40,7 @@ import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.AlarmListState
 import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.AlarmListUiEvent
 import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.components.previewAlarm
 import com.embarkapps.snoozeloo.alarms.presentation.model.AlarmUi
-import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.BluePrimary
+import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.GrayDisabled
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.SnoozelooTheme
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.montserratFontFamily
 
@@ -59,7 +59,7 @@ fun AlarmDetailScreen(
     val saveButtonColors = ButtonDefaults.buttonColors().copy(
         containerColor = MaterialTheme.colorScheme.primary,
         contentColor = Color.White,
-        disabledContainerColor = BluePrimary,
+        disabledContainerColor = GrayDisabled,
         disabledContentColor = Color.White
     )
 
@@ -88,7 +88,7 @@ fun AlarmDetailScreen(
         ) {
             Button(
                 onClick = { onEvent(AlarmListUiEvent.OnCloseClicked) },
-                enabled = true,
+                enabled = state.isValid,
                 colors = saveButtonColors,
                 shape = RoundedCornerShape(10.dp),
                 contentPadding = PaddingValues(0.dp),
@@ -104,28 +104,32 @@ fun AlarmDetailScreen(
                 )
             }
 
-            Button(onClick = {
-                onEvent(
-                    AlarmListUiEvent.OnAlarmSaved(
-                        AlarmUi(
-                            title = alarm.title,
-                            hour = alarm.hour,
-                            minute = alarm.minute,
-                            isAm = alarm.isAm,
-                            isEnabled = true,
+            Button(
+                onClick = {
+                    onEvent(
+                        AlarmListUiEvent.OnAlarmSaved(
+                            AlarmUi(
+                                title = alarm.title,
+                                hour = alarm.hour,
+                                minute = alarm.minute,
+                                isEnabled = true,
+                            )
                         )
                     )
-                )
-            }, enabled = true, colors = saveButtonColors, content = {
-                Text(
-                    text = "Save",
-                    fontFamily = montserratFontFamily,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                    lineHeight = 19.5.sp,
-                    textAlign = TextAlign.Center
-                )
-            }, modifier = Modifier.height(32.dp)
+                },
+                enabled = state.isValid,
+                colors = saveButtonColors,
+                content = {
+                    Text(
+                        text = "Save",
+                        fontFamily = montserratFontFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        lineHeight = 19.5.sp,
+                        textAlign = TextAlign.Center
+                    )
+                },
+                modifier = Modifier.height(32.dp)
             )
 
         }
@@ -156,6 +160,7 @@ fun AlarmDetailScreen(
     when {
         openAlertDialog.value -> {
             TimePickerDialog(
+                alarmUi = alarm,
                 onDismiss = { openAlertDialog.value = false },
                 onConfirm = { hour, minute ->
                     onEvent(AlarmListUiEvent.OnTimeSelected(hour, minute))

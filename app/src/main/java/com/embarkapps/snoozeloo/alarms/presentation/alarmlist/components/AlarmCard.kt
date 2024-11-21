@@ -84,7 +84,7 @@ fun AlarmCard(
                         lineHeight = 51.2.sp,
                         fontFamily = montserratFontFamily,
                     )
-                    val formattedAMPM = if (alarm.isAm) "AM" else "PM"
+                    val formattedAMPM = if (alarm.hour.value in 0..11) "AM" else "PM"
                     Text(
                         text = formattedAMPM,
                         fontSize = 24.sp,

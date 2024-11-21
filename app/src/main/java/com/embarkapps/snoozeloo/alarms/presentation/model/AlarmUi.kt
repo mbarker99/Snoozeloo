@@ -5,12 +5,11 @@ import com.embarkapps.snoozeloo.core.domain.Constants
 import java.time.LocalDateTime
 
 data class AlarmUi(
-    val title: String,
-    val hour: FormattedTime,
-    val minute: FormattedTime,
-    val isAm: Boolean,
-    val isEnabled: Boolean,
-    val id: Long = 0L,
+    var title: String,
+    var hour: FormattedTime,
+    var minute: FormattedTime,
+    var isEnabled: Boolean,
+    var id: Long = 0L,
 )
 
 data class FormattedTime(
@@ -55,7 +54,6 @@ fun Alarm.toAlarmUi(): AlarmUi {
         title = this.title,
         hour = this.time.hour.toFormattedTime(Constants.HOUR),
         minute = this.time.minute.toFormattedTime(Constants.MINUTE),
-        isAm = this.time.hour < 12,
         isEnabled = this.isEnabled,
         id = this.id
     )

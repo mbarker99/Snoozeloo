@@ -11,24 +11,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.components.previewAlarm
+import com.embarkapps.snoozeloo.alarms.presentation.model.AlarmUi
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.BluePrimary
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.Gray
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.GraySurface
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.SnoozelooTheme
-import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimePickerDialog(
+    alarmUi: AlarmUi,
     onDismiss: () -> Unit,
     onConfirm: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val currentTime = Calendar.getInstance()
 
     val timePickerState = rememberTimePickerState(
-        initialHour = currentTime.get(Calendar.HOUR_OF_DAY),
-        initialMinute = currentTime.get(Calendar.MINUTE),
+        initialHour = alarmUi.hour.value,
+        initialMinute = alarmUi.minute.value,
         is24Hour = false
     )
 
@@ -76,12 +77,12 @@ fun TimePickerDialog(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun TimePickerDialogPreview(modifier: Modifier = Modifier) {
     SnoozelooTheme {
         TimePickerDialog(
+            alarmUi = previewAlarm,
             onDismiss = { },
             onConfirm = { _, _ -> }
         )
