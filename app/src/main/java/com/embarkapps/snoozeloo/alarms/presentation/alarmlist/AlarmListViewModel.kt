@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.embarkapps.snoozeloo.alarms.data.model.toAlarm
 import com.embarkapps.snoozeloo.alarms.data.model.toAlarmEntity
+import com.embarkapps.snoozeloo.alarms.domain.alarmscheduler.AlarmScheduler
 import com.embarkapps.snoozeloo.alarms.domain.repository.AlarmRepository
 import com.embarkapps.snoozeloo.alarms.presentation.model.AlarmUi
 import com.embarkapps.snoozeloo.alarms.presentation.model.toAlarm
@@ -26,7 +27,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AlarmListViewModel @Inject constructor(
     private val navigator: Navigator,
-    private val repository: AlarmRepository
+    private val repository: AlarmRepository,
+    private val alarmScheduler: AlarmScheduler
 ) : ViewModel() {
 
     companion object {
@@ -95,7 +97,8 @@ class AlarmListViewModel @Inject constructor(
                                 hour = 0.toFormattedTime(Constants.HOUR),
                                 minute = 0.toFormattedTime(Constants.MINUTE),
                                 isEnabled = true
-                            )
+                            ),
+                            isValid = false
                         )
                     }
                     navigator.navigate(Destination.AlarmDetailScreen)
@@ -172,6 +175,7 @@ class AlarmListViewModel @Inject constructor(
                 ).toAlarm().toAlarmEntity()
             )
             loadAlarms()
+            alarmScheduler.schedule(alarmUi.toAlarm())
             navigator.navigateUp()
         }
     }

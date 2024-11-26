@@ -6,4 +6,6 @@ object Constants {
 
     const val MINUTE = "minute"
     const val HOUR = "hour"
+
+    const val CHANNEL_ID = "alarm_channel"
 }

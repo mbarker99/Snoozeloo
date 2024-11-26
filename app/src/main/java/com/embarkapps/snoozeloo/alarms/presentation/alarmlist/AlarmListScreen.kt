@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -71,6 +72,7 @@ fun AlarmListScreen(
                 contentColor = Color.White
             )
         },
+        floatingActionButtonPosition = FabPosition.Center,
         modifier = modifier
             .background(MaterialTheme.colorScheme.background)
     ) { paddingValues ->

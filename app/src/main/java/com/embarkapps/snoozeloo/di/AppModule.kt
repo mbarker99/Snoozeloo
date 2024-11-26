@@ -2,8 +2,10 @@ package com.embarkapps.snoozeloo.di
 
 import android.content.Context
 import androidx.room.Room
+import com.embarkapps.snoozeloo.alarms.data.alarmscheduler.AlarmSchedulerImpl
 import com.embarkapps.snoozeloo.alarms.data.db.AlarmDao
 import com.embarkapps.snoozeloo.alarms.data.db.AlarmDatabase
+import com.embarkapps.snoozeloo.alarms.domain.alarmscheduler.AlarmScheduler
 import com.embarkapps.snoozeloo.core.data.navigation.NavigatorImpl
 import com.embarkapps.snoozeloo.core.domain.Constants
 import com.embarkapps.snoozeloo.core.domain.navigation.Navigator
@@ -38,4 +40,11 @@ class AppModule {
     fun provideNavigator(): Navigator = NavigatorImpl(
         startDestination = Destination.AlarmsGraph
     )
+
+    @Provides
+    @Singleton
+    fun providesAlarmScheduler(@ApplicationContext context: Context): AlarmScheduler =
+        AlarmSchedulerImpl(
+            context
+        )
 }

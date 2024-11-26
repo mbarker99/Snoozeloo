@@ -21,12 +21,14 @@ import androidx.compose.ui.unit.sp
 import com.embarkapps.snoozeloo.alarms.domain.model.Alarm
 import com.embarkapps.snoozeloo.alarms.presentation.alarmlist.AlarmListUiEvent
 import com.embarkapps.snoozeloo.alarms.presentation.model.AlarmUi
+import com.embarkapps.snoozeloo.alarms.presentation.model.toAlarm
 import com.embarkapps.snoozeloo.alarms.presentation.model.toAlarmUi
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.BlueDisabled
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.BluePrimary
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.SnoozelooTheme
 import com.embarkapps.snoozeloo.alarms.presentation.ui.theme.montserratFontFamily
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 @Composable
 fun AlarmCard(
@@ -95,9 +97,19 @@ fun AlarmCard(
                     )
                 }
 
-                // TODO : calculate remaining time here
+                var tempFromTime = LocalDateTime.from(LocalDateTime.now())
+                var tempToTime = LocalDateTime.from(alarm.toAlarm().time)
+                var hoursUntil = tempFromTime.until(tempToTime, ChronoUnit.HOURS)
+                var minutesUntil = tempFromTime.until(tempToTime, ChronoUnit.MINUTES)
+                if (hoursUntil <= 0 && minutesUntil <= 0) {
+                    tempToTime = tempToTime.plusDays(1)
+                    hoursUntil = tempFromTime.until(tempToTime, ChronoUnit.HOURS)
+                }
+                tempFromTime = tempFromTime.plusHours(hoursUntil)
+                minutesUntil = tempFromTime.until(tempToTime, ChronoUnit.MINUTES)
+
                 Text(
-                    text = "Alarm in",
+                    text = "Alarm in ${hoursUntil}hr ${minutesUntil}min",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
                     lineHeight = 17.07.sp,

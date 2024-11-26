@@ -11,4 +11,7 @@ sealed interface Destination {
 
     @Serializable
     data object AlarmDetailScreen : Destination
+
+    @Serializable
+    data object AlarmTriggerScreen : Destination
 }
