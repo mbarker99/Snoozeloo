@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.embarkapps.snoozeloo.alarms.data.notification.showNotificationWithFullScreenIntent
+import com.embarkapps.snoozeloo.core.domain.Constants.LOCK_SCREEN_KEY
 
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -13,5 +14,13 @@ class AlarmReceiver : BroadcastReceiver() {
         context?.showNotificationWithFullScreenIntent(
             title = title
         )
+    }
+
+    companion object {
+        fun build(context: Context, isLockScreen: Boolean): Intent {
+            return Intent(context, AlarmReceiver::class.java).also {
+                it.putExtra(LOCK_SCREEN_KEY, isLockScreen)
+            }
+        }
     }
 }

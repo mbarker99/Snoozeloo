@@ -8,4 +8,5 @@ object Constants {
     const val HOUR = "hour"
 
     const val CHANNEL_ID = "alarm_channel"
+    const val LOCK_SCREEN_KEY = "lock_screen"
 }

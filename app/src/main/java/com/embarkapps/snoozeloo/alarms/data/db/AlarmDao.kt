@@ -1,6 +1,7 @@
 package com.embarkapps.snoozeloo.alarms.data.db
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import com.embarkapps.snoozeloo.alarms.data.model.AlarmEntity
@@ -12,5 +13,8 @@ interface AlarmDao {
     suspend fun getAllAlarms(): List<AlarmEntity>
 
     @Upsert
-    suspend fun insertAll(vararg notes: AlarmEntity)
+    suspend fun insertAll(vararg alarmEntities: AlarmEntity)
+
+    @Delete
+    suspend fun delete(alarmEntity: AlarmEntity)
 }

@@ -67,10 +67,19 @@ class AlarmListViewModel @Inject constructor(
     private fun updateAlarmsList(alarmUi: AlarmUi) {
         val newList = _state.value.alarms.toMutableList()
         val newAlarm = newList.find { listAlarm -> alarmUi.id == listAlarm.id }
-        val updatedAlarm = newAlarm?.copy(isEnabled = !newAlarm.isEnabled)
+
+        val newIsEnabled = !newAlarm?.isEnabled!!
+        val updatedAlarm = newAlarm.copy(isEnabled = newIsEnabled)
         for (i in newList.indices) {
             if (newList[i] == alarmUi) {
-                newList[i] = updatedAlarm!!
+                newList[i] = updatedAlarm
+                if (!newIsEnabled) {
+                    alarmScheduler.cancel(newList[i].toAlarm())
+                    println("!newIsEnabled")
+                } else {
+                    alarmScheduler.schedule(newList[i].toAlarm())
+                    println("!newIsEnabled")
+                }
             }
         }
 
@@ -81,7 +90,7 @@ class AlarmListViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            repository.upsertAll(updatedAlarm!!.toAlarm().toAlarmEntity())
+            repository.upsertAll(updatedAlarm.toAlarm().toAlarmEntity())
         }
 
     }
