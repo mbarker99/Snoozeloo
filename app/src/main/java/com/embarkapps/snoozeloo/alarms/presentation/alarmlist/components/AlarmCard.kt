@@ -70,7 +70,7 @@ fun AlarmCard(
                 Text(
                     text = alarm.title,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Bold,
                     lineHeight = 19.5.sp,
                     fontFamily = montserratFontFamily,
                 )
